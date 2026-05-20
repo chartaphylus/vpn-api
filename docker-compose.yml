@@ -1,0 +1,33 @@
+# ===================================
+# Docker Compose — vpn-api (Production)
+# ===================================
+# Deploy ini di VPS untuk menjalankan backend API
+#
+# Setup:
+#   cp .env.example .env
+#   nano .env   ← isi semua variabel
+#   docker compose up -d --build
+
+services:
+  vpn-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vpn-api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
+    volumes:
+      # Mount WireGuard files dari host VPS
+      - /etc/wireguard:/etc/wireguard
+      - /home/ubuntu/apps/wireguard:/home/ubuntu/apps/wireguard
+    # Diperlukan untuk operasi WireGuard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    # network_mode: host agar bisa akses WireGuard interface di host
+    network_mode: host
