@@ -1,0 +1,15 @@
+node_modules
+# Keep environment variables out of version 
+.env
+.env.local
+dist
+coverage
+
+server_private.key
+server_public.key
+
+*.log
+
+wireguard/
+
+prisma/dev.db
